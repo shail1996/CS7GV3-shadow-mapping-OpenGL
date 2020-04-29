@@ -1,0 +1,23 @@
+#version 330 core
+
+in vec2 UV;
+in vec4 ShadowCoord;
+
+layout(location = 0) out vec3 color;
+
+uniform sampler2D myTextureSampler;
+uniform sampler2DShadow shadowMap;
+
+void main(){
+
+	vec3 LightColor = vec3(1,1,1);
+	
+	vec3 MaterialDiffuseColor = texture( myTextureSampler, UV ).rgb;
+
+	float visibility = 1.0;
+	if ( texture( shadowMap, ShadowCoord.xyz )  <  ShadowCoord.z){
+    	visibility = 0.5;
+	}
+
+	color = visibility * MaterialDiffuseColor * LightColor;
+}
